@@ -5,7 +5,7 @@ import torch
 class InferModule:
     def __init__(self, model):
         self.model = model
-        with open("./data/num2content.json", "r") as f:
+        with open("./model/num2content.json", "r") as f:
             self.num2content = json.load(f)
 
     def start_inferring(self, question_answer):
@@ -23,7 +23,7 @@ class InferModule:
 
         inferringResponse = {
             "hobbyType": {
-                "name": self.get_u_type(mbti_score),
+                "mbtiType": self.get_u_type(mbti_score),
                 "scores": [
                     {"scoreE": mbti_score[0]},
                     {"scoreN": mbti_score[1]},

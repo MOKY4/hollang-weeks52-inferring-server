@@ -5,7 +5,7 @@ from model.infer import InferModule
 from model.module import MyModule
 
 model = MyModule()
-model.load_state_dict(torch.load("./data/model.pt"))
+model.load_state_dict(torch.load("./model/model.pt"))
 IM = InferModule(model)
 
 app = Flask(__name__)
