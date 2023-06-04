@@ -21,26 +21,6 @@ class InferModule:
         ]
         mbti_score = list(map(int, mbti_score.tolist()))
 
-        inferringResponse = {
-            "hobbyType": {
-                "mbtiType": self.get_u_type(mbti_score),
-                "scores": [
-                    {"scoreE": mbti_score[0]},
-                    {"scoreN": mbti_score[1]},
-                    {"scoreF": mbti_score[2]},
-                    {"scoreJ": mbti_score[3]},
-                ],
-            },
-            "hobbies": [
-                {"name": res[0]},
-                {"name": res[1]},
-                {"name": res[2]},
-            ],
-        }
-
-        return inferringResponse
-
-    def get_u_type(mbti_score):
         u_type = ""
         if mbti_score[0] >= 2:
             u_type += "E"
@@ -59,4 +39,21 @@ class InferModule:
         else:
             u_type += "P"
 
-        return u_type
+        inferringResponse = {
+            "hobbyType": {
+                "mbtiType": u_type,
+                "scores": [
+                    {"scoreE": mbti_score[0]},
+                    {"scoreN": mbti_score[1]},
+                    {"scoreF": mbti_score[2]},
+                    {"scoreJ": mbti_score[3]},
+                ],
+            },
+            "hobbies": [
+                {"name": res[0]},
+                {"name": res[1]},
+                {"name": res[2]},
+            ],
+        }
+
+        return inferringResponse
