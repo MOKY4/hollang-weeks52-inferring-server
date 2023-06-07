@@ -50,9 +50,9 @@ class InferModule:
                 ],
             },
             "hobbies": [
-                {"name": res[0]},
-                {"name": res[1]},
-                {"name": res[2]},
+                {"name": res[0], "ranking": 1},
+                {"name": res[1], "ranking": 2},
+                {"name": res[2], "ranking": 3},
             ],
         }
 
