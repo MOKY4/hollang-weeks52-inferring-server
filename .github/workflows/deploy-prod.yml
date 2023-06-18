@@ -1,5 +1,4 @@
 name: Deploy hollang x weeks52 API Server
-description: Build, Test, Deploy hollang x weeks52 API Server
 on:
   workflow_dispatch:
   push:
