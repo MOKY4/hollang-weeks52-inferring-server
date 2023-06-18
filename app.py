@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
 
+import torch
 from model.infer import InferModule
-from keras import models
+from model.module import MyModule
 
-model = models.load_model('./model/model_saved.h5')
+model = MyModule()
+model.load_state_dict(torch.load("./model/model.pt"))
 IM = InferModule(model)
 
 app = Flask(__name__)
