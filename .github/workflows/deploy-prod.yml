@@ -10,22 +10,7 @@ env:
   ECR_INFERRING_SERVER_REPOSITORY: hollang-weeks52-inferring-server
   IMAGE_TAG: ${{ github.sha }}
 jobs:
-  # Login to AWS ECR
-  login-to-aws-ecr:
-    runs-on: ubuntu-latest
-    steps:
-      - name: aws configure
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-      - name: Login to ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      - name: Set ECR_REGISTRY env variable
-        run: echo "ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
-  build:
+  build-deploy:
     needs: login-to-aws-ecr
     runs-on: ubuntu-latest
     steps:
@@ -39,10 +24,24 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
+      # Configure AWS credential
+      - name: aws configure
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      # Login to AWS ECR
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
       # Build docker image and push to aws ecr
       - name: Build docker image
         env:
-          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:$IMAGE_TAG -f Dockerfile-prod .
-          docker push $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:$IMAGE_TAG
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker build -t $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:$IMAGE_TAG -f Dockerfile-prod .
+      # Push docker image to AWS ECR
+      - name: Push docker image to AWS ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker push $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:$IMAGE_TAG
