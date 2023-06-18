@@ -12,6 +12,8 @@ env:
 jobs:
   # Login to AWS ECR
   login-to-aws-ecr:
+    outputs:
+      registry: ${{ steps.login-ecr.outputs.registry }}
     runs-on: ubuntu-latest
     steps:
       - name: aws configure
@@ -23,8 +25,6 @@ jobs:
       - name: Login to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-    outputs:
-      registry: ${{ steps.login-ecr.outputs.registry }}
   build:
     needs: login-to-aws-ecr
     runs-on: ubuntu-latest
