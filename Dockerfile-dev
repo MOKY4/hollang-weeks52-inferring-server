@@ -14,8 +14,8 @@ RUN pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightl
 COPY . /app
 
 ENV FLASK_APP=app.py
-# 0: prod 환경
-ENV FLASK_DEBUG=0
+# 1: dev 환경
+ENV FLASK_DEBUG=1
 
 # Expose the port that Flask app will be served on
 EXPOSE 5000
