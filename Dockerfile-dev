@@ -1,16 +1,23 @@
 # Base image
 FROM python:3.10-alpine
 
+# Install system dependencies
+RUN apk add --no-cache \
+    libstdc++
+
+# Install PyTorch dependencies
+RUN apk add --no-cache \
+    build-base \
+    g++ \
+    git \
+    libjpeg \
+    libjpeg-turbo-dev \
+    libpng \
+    libpng-dev \
+    openblas-dev
+
 # Set the working directory
 WORKDIR /app
-
-# Install system dependencies
-RUN apk update && \
-    apk add --no-cache gcc musl-dev libffi-dev openssl-dev g++ make
-
-# Install PyTorch
-RUN apk add --no-cache libstdc++ libgcc
-RUN pip install torch==2.0.0 torchvision
 
 # Copy the requirements.txt file to the working directory
 COPY requirements.txt .
