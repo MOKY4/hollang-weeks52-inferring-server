@@ -11,6 +11,7 @@ env:
   IMAGE_TAG: ${{ github.sha }}
 jobs:
   build-deploy:
+    environment: production
     runs-on: ubuntu-latest
     steps:
       # Checkout source code

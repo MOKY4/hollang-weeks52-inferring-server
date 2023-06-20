@@ -9,7 +9,6 @@ on:
       - 'model/**'
       - 'app.py'
       - 'requirements.txt'
-      - 'requirements-*.txt'
       - '.dockerignore'
       - 'Dockerfile-dev'
 env:
@@ -45,4 +44,4 @@ jobs:
           context: .
           file: ./Dockerfile-dev
           push: true
-          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_INFERRING_SERVER_REPOSITORY }}:latest
+          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_INFERRING_SERVER_REPOSITORY }}:${{ env.IMAGE_TAG }}
