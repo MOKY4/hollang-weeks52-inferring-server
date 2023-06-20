@@ -1,34 +1,25 @@
 # Base image
-FROM python:3.10-slim-buster as builder
-
-# Set working directory
-WORKDIR /app
-
-# Copy requirements file
-COPY requirements.txt .
-
-# Install dependencies
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-cache-dir --user -r requirements.txt
-
-# Stage 2: Production Environment
 FROM python:3.10-slim-buster
 
 # Set working directory
 WORKDIR /app
 
-# Copy the installed dependencies from the builder stage
-COPY --from=builder /root/.local /root/.local
-
-# Add the installed dependencies to PATH
-ENV PATH=/root/.local/bin:$PATH
-
-# Copy application code
-COPY . /app
-
 ENV FLASK_APP=app.py
 # 1: dev 환경
 ENV FLASK_DEBUG=1
+
+# Copy requirements file
+COPY requirements.txt .
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libgomp1 && \
+    pip install --no-cache-dir -r requirements.txt && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy application code
+COPY . /app
 
 # Expose the port that Flask app will be served on
 EXPOSE 5000
