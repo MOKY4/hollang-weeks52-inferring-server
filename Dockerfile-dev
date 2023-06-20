@@ -4,11 +4,9 @@ FROM python:3.10-slim-buster
 # Set working directory
 WORKDIR /app
 
-# Copy requirements file
-COPY requirements-linux.txt .
-
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements-linux.txt
+RUN pip install -U Flask
+RUN pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu
 
 # Copy application code
 COPY . /app
