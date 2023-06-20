@@ -5,7 +5,9 @@ FROM python:3.10-slim-buster
 WORKDIR /app
 
 # Install dependencies
+RUN pip install --upgrade pip
 RUN pip install -U Flask
+RUN pip install numpy
 RUN pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu
 
 # Copy application code
