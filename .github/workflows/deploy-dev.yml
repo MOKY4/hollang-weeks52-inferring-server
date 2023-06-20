@@ -44,4 +44,4 @@ jobs:
           context: .
           file: ./Dockerfile-dev
           push: true
-          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_INFERRING_SERVER_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_INFERRING_SERVER_REPOSITORY }}:latest
