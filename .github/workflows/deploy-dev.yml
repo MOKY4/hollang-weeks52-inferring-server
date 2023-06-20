@@ -8,6 +8,8 @@ on:
       - '.github/workflows/deploy-dev.yml'
       - 'model/**'
       - 'app.py'
+      - 'requirements.txt'
+      - 'requirements-*.txt'
       - '.dockerignore'
       - 'Dockerfile-dev'
 env:
