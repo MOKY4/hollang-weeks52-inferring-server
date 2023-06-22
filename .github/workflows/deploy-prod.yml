@@ -4,10 +4,15 @@ on:
   push:
     branches:
       - 'main'
+    paths-ignore:
+      - 'deploy-stage.yml'
+      - 'deploy-dev.yml'
+      - 'Dockerfile-stage'
+      - 'Dockerfile-dev'
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  ECR_INFERRING_SERVER_REPOSITORY: hollang-weeks52-inferring-server
+  ECR_INFERRING_SERVER_REPOSITORY: hollang-weeks52-inferring-server-prod
   IMAGE_TAG: ${{ github.sha }}
 jobs:
   build-deploy:
