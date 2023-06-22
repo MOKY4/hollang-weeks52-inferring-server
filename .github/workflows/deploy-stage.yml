@@ -1,0 +1,45 @@
+name: Deploy hollang x weeks52 API Server
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'stage'
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  ECR_INFERRING_SERVER_REPOSITORY: hollang-weeks52-inferring-server
+  IMAGE_TAG: ${{ github.sha }}
+jobs:
+  build-deploy:
+    environment: stage
+    runs-on: ubuntu-latest
+    env:
+      ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+    steps:
+      # Checkout source code
+      - name: Checkout code
+        uses: actions/checkout@v3
+      # Cache dependencies
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      # Configure AWS credential
+      - name: aws configure
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      # Login to AWS ECR
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      # Build docker image and push to aws ecr
+      - name: Build docker image
+        run: docker build -t $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:$IMAGE_TAG -f Dockerfile-stage .
+      # Push docker image to AWS ECR
+      - name: Push docker image to AWS ECR
+        run: docker push $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:$IMAGE_TAG
