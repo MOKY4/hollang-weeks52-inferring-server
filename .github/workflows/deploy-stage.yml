@@ -3,20 +3,19 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
+      - 'stage'
     paths-ignore:
-      - 'deploy-stage.yml'
+      - 'deploy-prod.yml'
       - 'deploy-dev.yml'
-      - 'Dockerfile-stage'
+      - 'Dockerfile-prod'
       - 'Dockerfile-dev'
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  ECR_INFERRING_SERVER_REPOSITORY: hollang-weeks52-inferring-server-prod
-  IMAGE_TAG: ${{ github.sha }}
+  ECR_INFERRING_SERVER_REPOSITORY: hollang-weeks52-inferring-server-stage
 jobs:
   build-deploy:
-    environment: production
+    environment: stage
     runs-on: ubuntu-latest
     steps:
       # Checkout source code
@@ -44,7 +43,7 @@ jobs:
       - name: Build docker image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: docker build -t $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:latest -f Dockerfile-prod .
+        run: docker build -t $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:latest -f Dockerfile-stage .
       # Push docker image to AWS ECR
       - name: Push docker image to AWS ECR
         env:

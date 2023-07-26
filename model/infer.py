@@ -42,12 +42,12 @@ class InferModule:
         inferringResponse = {
             "hobbyType": {
                 "mbtiType": u_type,
-                "scores": [
-                    {"scoreE": mbti_score[0]},
-                    {"scoreN": mbti_score[1]},
-                    {"scoreF": mbti_score[2]},
-                    {"scoreJ": mbti_score[3]},
-                ],
+                "scores": {
+                    "scoreE": mbti_score[0],
+                    "scoreN": mbti_score[1],
+                    "scoreF": mbti_score[2],
+                    "scoreJ": mbti_score[3]
+                },
             },
             "hobbies": [
                 {"name": res[0], "ranking": 1},
