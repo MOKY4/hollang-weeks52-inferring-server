@@ -13,8 +13,6 @@ jobs:
   build-deploy:
     environment: stage
     runs-on: ubuntu-latest
-    env:
-      ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
     steps:
       # Checkout source code
       - name: Checkout code
@@ -39,7 +37,11 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
       # Build docker image and push to aws ecr
       - name: Build docker image
-        run: docker build -t $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:$IMAGE_TAG -f Dockerfile-stage .
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker build -t $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:latest -f Dockerfile-stage .
       # Push docker image to AWS ECR
       - name: Push docker image to AWS ECR
-        run: docker push $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:$IMAGE_TAG
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker push $ECR_REGISTRY/$ECR_INFERRING_SERVER_REPOSITORY:latest
